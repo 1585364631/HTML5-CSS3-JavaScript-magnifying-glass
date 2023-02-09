@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+  <title>放大</title>
+  <style>
+    * {
+      border: 0px;
+      padding: 0px;
+      margin: 0px;
+    }
+
+    .box {
+      margin-left: 50px;
+      margin-top: 100px;
+      float: left;
+      border: 5px solid black;
+      position: relative;
+      background-color: black;
+    }
+
+    .box img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    .fdj {
+      visibility: hidden;
+      position: absolute;
+      background-color: aqua;
+      opacity: 0.1;
+    }
+
+    .out_box {
+      margin-top: 100px;
+      visibility: hidden;
+      margin-left: 50px;
+      overflow: hidden;
+      float: left;
+      border: 5px solid black;
+      position: relative;
+      background-color: black;
+    }
+
+    .out_box img {
+      position: absolute;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box" id="box">
+    <img id="smallimg" />
+    <div class="fdj" id="fdj"></div>
+  </div>
+  <div class="out_box" id="out_box">
+    <img id="bigimg" />
+  </div>
+
+  <iframe src="./index1.html" width="100%" height="500px" style="margin-top: 30px;margin-left: 100px;"></iframe>
+
+  <script>
+    // 图片地址
+    var img_url = "bg.jpg"
+    // 普通图片宽高大小 box
+    var small_width = 640;
+    var small_height = 360;
+    // 放大倍率
+    var width_beilv = 3;
+    var height_beilv = 3;
+
+    var box = document.getElementById("box");
+    var fdj = document.getElementById("fdj");
+    var out_box = document.getElementById("out_box");
+    var smallimg = document.getElementById("smallimg");
+    var bigimg = document.getElementById("bigimg");
+    // 放大镜宽高
+    var fdj_width = small_width / width_beilv;
+    var fdj_height = small_height / height_beilv;
+    // 放大后图片宽高
+    var big_width = small_width * width_beilv;
+    var big_height = small_height * height_beilv;
+
+    // 重新调整布局
+    //box
+    box.style.width = small_width + "px";
+    box.style.height = small_height + "px";
+    //fdj
+    fdj.style.width = fdj_width + "px";
+    fdj.style.height = fdj_height + "px";
+    //out_box
+    out_box.style.width = small_width + "px";
+    out_box.style.height = small_height + "px";
+    //img
+    smallimg.src = img_url;
+    bigimg.src = img_url;
+    bigimg.style.width = big_width + "px";
+    bigimg.style.height = big_height + "px";
+
+    box.onmouseover = function (e) {
+      fdj.style.visibility = "visible";
+      out_box.style.visibility = "visible";
+    };
+
+    box.onmousemove = function (e) {
+      //用page而不用clien的原因是如果页面过长导致轮滑滚动，clien错位
+      var x = e.pageX - fdj_width / 2 - box.offsetLeft;
+      var y = e.pageY - fdj_height / 2 - box.offsetTop;
+      x =
+        x < 0 ? 0 : x > small_width - fdj_width ? small_width - fdj_width : x;
+      y =
+        y < 0
+          ? 0
+          : y > small_height - fdj_height
+            ? small_height - fdj_height
+            : y;
+      fdj.style.left = x + "px";
+      fdj.style.top = y + "px";
+      bigimg.style.left = -1 * width_beilv * x + "px";
+      bigimg.style.top = -1 * height_beilv * y + "px";
+    };
+
+    box.onmouseout = function (e) {
+      fdj.style.visibility = "hidden";
+      out_box.style.visibility = "hidden";
+    };
+  </script>
+</body>
+
+</html>
